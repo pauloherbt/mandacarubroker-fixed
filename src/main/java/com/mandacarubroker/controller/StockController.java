@@ -1,6 +1,6 @@
 package com.mandacarubroker.controller;
 
-import com.mandacarubroker.domain.stock.RequestStockDTO;
+import com.mandacarubroker.dtos.RequestStockDTO;
 import com.mandacarubroker.domain.stock.Stock;
 import com.mandacarubroker.service.StockService;
 import jakarta.servlet.http.HttpServletRequest;

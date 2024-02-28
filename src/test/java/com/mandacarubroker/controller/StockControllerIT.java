@@ -2,7 +2,7 @@ package com.mandacarubroker.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mandacarubroker.MandacaruBrokerApplication;
-import com.mandacarubroker.domain.stock.RequestStockDTO;
+import com.mandacarubroker.dtos.RequestStockDTO;
 import com.mandacarubroker.domain.stock.Stock;
 import com.mandacarubroker.domain.stock.StockRepository;
 import org.hamcrest.Matchers;

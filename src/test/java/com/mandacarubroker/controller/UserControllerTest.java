@@ -2,8 +2,8 @@ package com.mandacarubroker.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mandacarubroker.controller.exceptions.StandardError;
-import com.mandacarubroker.domain.user.RequestUserDTO;
-import com.mandacarubroker.domain.user.ResponseUserDTO;
+import com.mandacarubroker.dtos.RequestUserDTO;
+import com.mandacarubroker.dtos.ResponseUserDTO;
 import com.mandacarubroker.domain.user.User;
 import com.mandacarubroker.service.UserService;
 import jakarta.persistence.EntityNotFoundException;

@@ -1,4 +1,4 @@
-package com.mandacarubroker.domain.user;
+package com.mandacarubroker.dtos;
 
 import java.time.LocalDate;
 

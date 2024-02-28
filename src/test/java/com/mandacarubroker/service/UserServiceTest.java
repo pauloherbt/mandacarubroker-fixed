@@ -1,7 +1,7 @@
 package com.mandacarubroker.service;
 
-import com.mandacarubroker.domain.user.RequestUserDTO;
-import com.mandacarubroker.domain.user.ResponseUserDTO;
+import com.mandacarubroker.dtos.RequestUserDTO;
+import com.mandacarubroker.dtos.ResponseUserDTO;
 import com.mandacarubroker.domain.user.User;
 import com.mandacarubroker.domain.user.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
