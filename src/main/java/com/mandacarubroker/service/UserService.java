@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 public class UserService implements UserDetailsService {
     
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
     private static final String NOT_FOUND_MSG = "User Not Found";
     
     public List<ResponseUserDTO> getAllUsers() {
@@ -33,6 +35,7 @@ public class UserService implements UserDetailsService {
     public ResponseUserDTO createUser(RequestUserDTO data) {
         validateRequestUserDTO(data);
         User newUser = new User(data);
+        newUser.setPassword(passwordEncoder.encode(data.password()));
         newUser.setRole(Role.NORMAL);
         return new ResponseUserDTO(userRepository.save(newUser));
     }
