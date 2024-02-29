@@ -1,7 +1,6 @@
 package com.mandacarubroker.dtos;
 
 import com.mandacarubroker.domain.user.User;
-
 import java.time.LocalDate;
 
 public record ResponseUserDTO (
