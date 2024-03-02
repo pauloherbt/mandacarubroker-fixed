@@ -49,7 +49,7 @@ public class UserService implements UserDetailsService {
         User updatedUserEntity = userRepository.findById(id)
                 .map(user -> {
                     user.setUsername(updatedUser.username());
-                    user.setPassword(updatedUser.password());
+                    user.setPassword(passwordEncoder.encode(updatedUser.password()));
                     user.setEmail(updatedUser.email());
                     user.setFirstName(updatedUser.firstName());
                     user.setLastName(updatedUser.lastName());
