@@ -45,8 +45,9 @@ class UserControllerTest {
     private StandardError errorNotFound;
     @BeforeEach
     void setup(){
-        User user = new User("1", "peaga", "123456", "peaga@mail.com"
+        User user = new User("peaga", "123456", "peaga@mail.com"
                 , "Paulo", "Herbert", LocalDate.parse("2004-04-05"), 500.0);
+        user.setId("1");
         validRequestUserDto = new RequestUserDTO(user.getUsername(), user.getPassword()
                 , user.getEmail(), user.getFirstName(), user.getLastName(), user.getBirthDate(), user.getBalance());
         validResponseUserDto = new ResponseUserDTO(user);
