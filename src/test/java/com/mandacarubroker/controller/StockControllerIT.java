@@ -1,41 +1,31 @@
 package com.mandacarubroker.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mandacarubroker.MandacaruBrokerApplication;
-import com.mandacarubroker.domain.Role;
+import com.mandacarubroker.UserFactory;
+import com.mandacarubroker.domain.stock.Stock;
+import com.mandacarubroker.domain.stock.StockRepository;
 import com.mandacarubroker.domain.user.User;
 import com.mandacarubroker.domain.user.UserRepository;
 import com.mandacarubroker.dtos.RequestLoginDTO;
 import com.mandacarubroker.dtos.RequestStockDTO;
-import com.mandacarubroker.domain.stock.Stock;
-import com.mandacarubroker.domain.stock.StockRepository;
-import org.aspectj.apache.bcel.Repository;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.runner.WebApplicationContextRunner;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.WebApplicationContext;
-
-import java.io.UnsupportedEncodingException;
-import java.time.LocalDate;
 import java.util.List;
-
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -60,25 +50,22 @@ class StockControllerIT {
     private String existingId;
     private static User normalUser;
     private static User adminUser;
-    private static final String noEncryptedPassword = "12345678";
-    private static String EncryptedPassword;
+    private static final String NO_ENCRYPTED_PASS = "12345678";
     @BeforeEach
     void setup() {
         stock = new Stock("1","ABC1","ABC COMPANY",50.0);
         Stock savedStock = stockRepository.save(stock);
         totalStocks=stockRepository.count();
         existingId = savedStock.getId();
-
-        EncryptedPassword = passwordEncoder.encode(noEncryptedPassword);
-        normalUser = new User("paulo",EncryptedPassword,"paulo@email.com","Paulo","Herbert", LocalDate.parse("2000-05-04"),100.0);
-        normalUser.setRole(Role.NORMAL);
-        adminUser = new User("admin",EncryptedPassword,"admin@email.com","","", LocalDate.parse("2000-05-04"),0.0);
-        adminUser.setRole(Role.ADMIN);
+        //users
+        String encryptedPassword = passwordEncoder.encode(NO_ENCRYPTED_PASS);
+        normalUser = UserFactory.createUserWithNormalRole(encryptedPassword);
+        adminUser = UserFactory.createAdminUser(encryptedPassword);
         userRepository.saveAll(List.of(normalUser,adminUser));
     }
 
-    private String authenticateUser(User adminUser) throws Exception {
-        RequestLoginDTO reqLoginDto = new RequestLoginDTO(adminUser.getUsername(),noEncryptedPassword);
+    private String authenticateUser(User user) throws Exception {
+        RequestLoginDTO reqLoginDto = new RequestLoginDTO(user.getUsername(),NO_ENCRYPTED_PASS);
         var responseBody = mockMvc.perform(post("/login").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(reqLoginDto)))
                 .andExpect(status().isOk()).andReturn();
 
@@ -114,7 +101,7 @@ class StockControllerIT {
                 .andExpect(status().isForbidden()).andReturn();
 
         String jsonRespStock = result.getResponse().getContentAsString();
-        assertEquals(jsonRespStock,"");
+        assertEquals("",jsonRespStock);
         assertEquals(totalStocks,stockRepository.count());
     }
 
