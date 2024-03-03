@@ -12,7 +12,7 @@ public record RequestUserDTO(
         LocalDate birthDate,
         Double balance
 ) {
-    public RequestUserDTO(User user) {
+    public RequestUserDTO(User user){
         this(user.getUsername(),user.getPassword(),user.getEmail(),user.getFirstName(),user.getLastName(),user.getBirthDate(),user.getBalance());
     }
 }
