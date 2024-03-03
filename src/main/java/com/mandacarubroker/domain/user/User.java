@@ -29,7 +29,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @EqualsAndHashCode(of="id")
 public class User implements UserDetails {
 
-    @Id @GeneratedValue(strategy = GenerationType.UUID) @NonNull
+    @Id @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     @NonNull
     private String username;

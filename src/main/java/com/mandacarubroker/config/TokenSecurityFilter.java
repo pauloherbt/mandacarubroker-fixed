@@ -39,7 +39,7 @@ public class TokenSecurityFilter extends OncePerRequestFilter {
         }
         try{
             String userSubject = tokenService.validateToken(token); //lançar exceção aqui
-            User user = userRepository.findByUsername(userSubject).orElseThrow();
+            User user = userRepository.findByUsername(userSubject).orElseThrow(()->new JWTVerificationException("user not found"));
             SecurityContextHolder.getContext().setAuthentication(UsernamePasswordAuthenticationToken.authenticated(user,null,user.getAuthorities()));
             filterChain.doFilter(request,response);
         }catch (JWTVerificationException exception){
@@ -52,7 +52,7 @@ public class TokenSecurityFilter extends OncePerRequestFilter {
         return header !=null ? header.substring(CHARS_TO_SKIP) : null; //"Bearer "
     }
 
-    private void handleException(JWTVerificationException ex,HttpServletRequest req,HttpServletResponse res) throws IOException {
+    private void handleException(RuntimeException ex,HttpServletRequest req,HttpServletResponse res) throws IOException {
         res.setStatus(HttpStatus.UNAUTHORIZED.value());
         res.getWriter().print(objectMapper.writeValueAsString(new StandardError(Instant.now(), HttpStatus.UNAUTHORIZED.value(),
                 "Invalid Token",ex.getMessage(),req.getRequestURI())));

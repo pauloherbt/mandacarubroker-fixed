@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private static final String[] ADM_URLS={"/users/**"};
-    private static final String[] NORMAL_URLS={"/stocks/**"};
+    private static final String[] NORMAL_URLS={"/stocks/**", "/login/**"};
     private static final String[] PUBLIC_URLS={"/login/**","/users/**"};
 
     @Bean
