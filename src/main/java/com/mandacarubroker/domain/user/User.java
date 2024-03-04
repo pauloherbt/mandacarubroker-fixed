@@ -91,7 +91,7 @@ public class User implements UserDetails {
     }
 
     public void withdraw(double amount) {
-        if(amount > 0) {
+        if(amount <= 0) {
             throw new IllegalArgumentException("The withdraw amount must be greater than zero");
         } else if(amount <= this.balance) {
             throw new IllegalArgumentException("The withdrawal amount must be less than or equal to your account balance");
