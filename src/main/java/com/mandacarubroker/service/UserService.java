@@ -71,4 +71,18 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username).orElseThrow(()->new UsernameNotFoundException("username not found:"+username));
     }
+
+    public ResponseUserDTO deposit(String username, double amount) {
+        User user = (User) this.loadUserByUsername(username);
+        user.deposit(amount);
+        userRepository.save(user);
+        return new ResponseUserDTO(user);
+    }
+
+    public ResponseUserDTO withdraw(String username, double amount) {
+        User user = (User) this.loadUserByUsername(username);
+        user.withdraw(amount);
+        userRepository.save(user);
+        return new ResponseUserDTO(user);
+    }
 }
