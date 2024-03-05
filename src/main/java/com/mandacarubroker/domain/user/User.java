@@ -50,6 +50,7 @@ public class User implements UserDetails {
 
     public User(RequestUserDTO dto){
         setUsername(dto.username());
+        setPassword(dto.password());
         setEmail(dto.email());
         setFirstName(dto.firstName());
         setLastName(dto.lastName());
