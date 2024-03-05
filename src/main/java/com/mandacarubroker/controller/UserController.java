@@ -51,15 +51,13 @@ public class UserController {
 
     @PatchMapping("/transactions/deposit")
     public ResponseEntity<ResponseUserDTO> deposit(@AuthenticationPrincipal UserDetails userDetails, @RequestBody DataWrap amount) {
-        String username = userDetails.getUsername();
-        ResponseUserDTO responseUserDTO = userService.deposit(username, amount.getAmount());
+        ResponseUserDTO responseUserDTO = userService.deposit(userDetails.getUsername(), amount.getAmount());
         return ResponseEntity.ok(responseUserDTO);
     }
 
     @PatchMapping("/transactions/withdraw")
     public ResponseEntity<ResponseUserDTO> withdraw(@AuthenticationPrincipal UserDetails userDetails, @RequestBody DataWrap amount) {
-        String username = userDetails.getUsername();
-        ResponseUserDTO responseUserDTO = userService.withdraw(username, amount.getAmount());
+        ResponseUserDTO responseUserDTO = userService.withdraw(userDetails.getUsername(), amount.getAmount());
         return ResponseEntity.ok(responseUserDTO);
     }
     
