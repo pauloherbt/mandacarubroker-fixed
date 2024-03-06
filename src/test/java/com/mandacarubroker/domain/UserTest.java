@@ -37,7 +37,7 @@ public class UserTest {
         double initialBalance = user.getBalance();
         double depositAmount = 50.00;
         user.deposit(depositAmount);
-        assertEquals(initialBalance - depositAmount, user.getBalance(), 0.001);
+        assertEquals(initialBalance + depositAmount, user.getBalance(), 0.001);
     }
 
     @Test
