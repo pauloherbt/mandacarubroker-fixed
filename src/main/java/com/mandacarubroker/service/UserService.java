@@ -6,7 +6,11 @@ import com.mandacarubroker.domain.user.UserRepository;
 import com.mandacarubroker.dtos.RequestUserDTO;
 import com.mandacarubroker.dtos.ResponseUserDTO;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,7 +25,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private static final String NOT_FOUND_MSG = "User Not Found";
-    
+    private final Validator validator;
     public List<ResponseUserDTO> getAllUsers() {
         return userRepository.findAll()
                 .stream().map(ResponseUserDTO::new).toList();
@@ -40,8 +44,16 @@ public class UserService implements UserDetailsService {
         return new ResponseUserDTO(userRepository.save(newUser));
     }
 
-    private void validateRequestUserDTO(RequestUserDTO data) {
-        //validation method
+    public  void validateRequestUserDTO(RequestUserDTO data) {
+        Set<ConstraintViolation<RequestUserDTO>> violations = validator.validate(data);
+        if (!violations.isEmpty()) {
+            StringBuilder errorMessage = new StringBuilder("Validation failed. Details: ");
+            for (ConstraintViolation<RequestUserDTO> violation : violations) {
+                errorMessage.append(String.format("[%s: %s], ", violation.getPropertyPath(), violation.getMessage()));
+            }
+            errorMessage.delete(errorMessage.length() - 2, errorMessage.length());
+            throw new ConstraintViolationException(errorMessage.toString(), violations);
+        }
     }
 
     public ResponseUserDTO updateUser(String id, RequestUserDTO updatedUser) {
@@ -70,19 +82,5 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username).orElseThrow(()->new UsernameNotFoundException("username not found:"+username));
-    }
-
-    public ResponseUserDTO deposit(String username, double amount) {
-        User user = (User) this.loadUserByUsername(username);
-        user.deposit(amount);
-        userRepository.save(user);
-        return new ResponseUserDTO(user);
-    }
-
-    public ResponseUserDTO withdraw(String username, double amount) {
-        User user = (User) this.loadUserByUsername(username);
-        user.withdraw(amount);
-        userRepository.save(user);
-        return new ResponseUserDTO(user);
     }
 }
