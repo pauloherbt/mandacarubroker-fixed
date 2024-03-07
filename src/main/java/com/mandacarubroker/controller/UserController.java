@@ -1,15 +1,19 @@
 package com.mandacarubroker.controller;
 
+import com.mandacarubroker.dtos.DataWrap;
 import com.mandacarubroker.dtos.RequestUserDTO;
 import com.mandacarubroker.dtos.ResponseUserDTO;
 import com.mandacarubroker.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
-import java.net.URI;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -44,6 +48,18 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable String id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/transactions/deposit")
+    public ResponseEntity<ResponseUserDTO> deposit(@AuthenticationPrincipal UserDetails userDetails, @RequestBody DataWrap amount) {
+        ResponseUserDTO responseUserDTO = userService.deposit(userDetails.getUsername(), amount.getAmount());
+        return ResponseEntity.ok(responseUserDTO);
+    }
+
+    @PatchMapping("/transactions/withdraw")
+    public ResponseEntity<ResponseUserDTO> withdraw(@AuthenticationPrincipal UserDetails userDetails, @RequestBody DataWrap amount) {
+        ResponseUserDTO responseUserDTO = userService.withdraw(userDetails.getUsername(), amount.getAmount());
+        return ResponseEntity.ok(responseUserDTO);
     }
     
 }
