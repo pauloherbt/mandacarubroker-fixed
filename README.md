@@ -13,7 +13,19 @@ O usuário na aplicação deve ser composto pelos seguintes campos:
 + birthDate (apenas maiores de 18 anos)
 + balance
 
-As funcionalidades podem ser acessadas a partir da rota `/users`. 
+O usuário deve enviar suas credenciais (username e password) no corpo da requisição. Se as credenciais forem válidas, o servidor deve gerar um token JWT e retorná-lo no corpo da resposta.
+
+```json
+  {
+    "username": "peaga12",
+    "password": "Suasenha_aqui123"
+  }
+```
+As funcionalidades podem ser acessadas a partir da rota `/users`.  
+**Header:**
+```http
+Authorization : Bearer <acess_token>
+```
 ```http
 POST /users
 ```
@@ -30,16 +42,6 @@ POST /users
 ```
 As únicas validações são a nível de banco de dados(campos username e email são únicos, não permite repetição)
 formato de data "yyyy-MM-dd"
-
-O usuário deve enviar suas credenciais (username e password) no corpo da requisição. Se as credenciais forem válidas, o servidor deve gerar um token JWT e retorná-lo no corpo da resposta.
-
-```json
-  {
-    "username": "peaga12"
-    "password": "********"
-  }
-```
-
 ## Stocks
 **Uma Stock tem a seguinte estrutura:**  
 + Id
@@ -179,14 +181,16 @@ DELETE /stocks/{id}
 
 ### Sumário dos códigos HTTP
 
-| Código | Mensagem             | Descrição                                       |
-|:-------|:---------------------|-------------------------------------------------|
-| `200`  | Ok                   | Requisição processada com sucesso               |
-| `201`  | Created              | Recurso criado com sucesso                      |
-| `204`  | No content           | Requisição processada com sucesso e sem retorno |
-| `404`  | Not Found            | Recurso não encontrado                          |
-| `422`  | Unprocessable Entity | Erro na validação dos campos da requisição      |
-| `500`  | Server error         | Um Problema ocorreu no servidor                 |
+| Código | Mensagem             | Descrição                                                            |
+|:-------|:---------------------|----------------------------------------------------------------------|
+| `200`  | Ok                   | Requisição processada com sucesso                                    |
+| `201`  | Created              | Recurso criado com sucesso                                           |
+| `204`  | No content           | Requisição processada com sucesso e sem retorno                      |
+| `401`  | Unauthorized         | Credenciais de login inválidas                                       |
+| `403`   | Forbidden            | Requisição de um usuário autenticado, porém sem permissão suficiente |
+| `404`  | Not Found            | Recurso não encontrado                                               ||        |                      |                                                 |
+| `422`  | Unprocessable Entity | Erro na validação dos campos da requisição                           |
+| `500`  | Server error         | Um Problema ocorreu no servidor                                      |
 
 ## Operações 
 Os usuários autenticados podem realizar operações de saque e depósito em seu saldo (balance).O campo "balance" representa o montante disponível para o usuário na corretora. Esse saldo pode ser utilizado para a compra de ações ou para saques, conforme a escolha do usuário.
@@ -215,11 +219,6 @@ Os usuários autenticados podem realizar operações de saque e depósito em seu
 2. Importe o projeto em sua IDE preferida.
 3. Configure a conexão com o banco de dados desejado:
 arquivo `application.properties`
-```yaml
-spring.datasource.url=jdbc:postgresql://localhost:5432/mandacaru-broker
-spring.datasource.username=peaga
-spring.datasource.password=peaga
-```
 4. Execute o aplicativo Spring Boot.
 5. Acesse a API em `http://localhost:8080`.
 
