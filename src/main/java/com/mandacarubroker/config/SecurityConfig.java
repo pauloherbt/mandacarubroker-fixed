@@ -25,7 +25,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(x->x.requestMatchers(HttpMethod.POST,PUBLIC_URLS).permitAll())
                 .authorizeHttpRequests(x->x.requestMatchers(HttpMethod.GET,NORMAL_URLS).permitAll())
-                .authorizeHttpRequests(x->x.requestMatchers(HttpMethod.PATCH,NORMAL_URLS).authenticated())
+                .authorizeHttpRequests(x->x.requestMatchers(HttpMethod.PATCH,PUBLIC_URLS[1]).authenticated())
                 .authorizeHttpRequests(x->x.requestMatchers(ADM_URLS).hasAuthority("ADMIN"))
                 .authorizeHttpRequests(x->x.requestMatchers(NORMAL_URLS).hasAuthority("ADMIN"))
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
